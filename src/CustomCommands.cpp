@@ -10,6 +10,8 @@
 #include "Transport.hpp"
 #include "Missions.hpp"
 
+#include "lua/LuaManager.hpp"
+
 #include <sstream>
 #include <iterator>
 #include <math.h>
@@ -942,6 +944,12 @@ static void unbanCommand(std::string full, std::vector<std::string>& args, CNSoc
     }
 }
 
+static void reloadScriptsCommand(std::string full, std::vector<std::string>& args, CNSocket *sock) {
+    // reloads all scripts
+    LuaManager::stopScripts();
+    LuaManager::loadScripts();
+}
+
 static void registerCommand(std::string cmd, int requiredLevel, CommandHandler handlr, std::string help) {
     commands[cmd] = ChatCommand(requiredLevel, handlr, help);
 }
@@ -980,4 +988,5 @@ void CustomCommands::init() {
     registerCommand("registerall", 50, registerallCommand, "register all SCAMPER and MSS destinations");
     registerCommand("unregisterall", 50, unregisterallCommand, "clear all SCAMPER and MSS destinations");
     registerCommand("redeem", 100, redeemCommand, "redeem a code item");
+    registerCommand("rscripts", 30, reloadScriptsCommand, "stops all script states and reloads all scripts");
 }
